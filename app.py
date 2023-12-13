@@ -313,6 +313,8 @@ def homepage():
     - logged in: 100 most recent messages of self & followed_users
     """
 
+    breakpoint()
+
     if g.user:
         messages = (Message
                     .query

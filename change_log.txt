@@ -1,0 +1,2 @@
+models 47: added autoincrement to Users class primary key.
+
