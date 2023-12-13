@@ -32,15 +32,18 @@ connect_db(app)
 def add_user_to_g():
     """If we're logged in, add curr user to Flask global."""
 
-    # Establish the global variable in flask object "g" to make logout a valid
-    # form on on every page
-    g.csrf_form = CSRFForm()
-
     if CURR_USER_KEY in session:
         g.user = User.query.get(session[CURR_USER_KEY])
 
     else:
         g.user = None
+
+@app.before_request
+def create_CSRF_Protection():
+    """ Establish the global variable in flask object "g" to make logout a valid
+    form on on every page"""
+
+    g.csrf_form = CSRFForm()
 
 
 def do_login(user):
@@ -56,6 +59,7 @@ def do_logout():
         del session[CURR_USER_KEY]
 
 
+
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
     """Handle user signup.
@@ -67,6 +71,7 @@ def signup():
     If the there already is a user with that username: flash message
     and re-present form.
     """
+#TODO: userimage still showing up despite being logged out in route.
 
     do_logout()
 
@@ -96,7 +101,12 @@ def signup():
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
-    """Handle user login and redirect to homepage on success."""
+    """Handle user login and redirect to homepage on success.
+    If user is logged in, will redirect to user's homepage.
+    """
+
+    if g.user:
+       return redirect('/')
 
     form = LoginForm()
 
@@ -120,14 +130,14 @@ def login():
 def logout():
     """Handle logout of user and redirect to homepage."""
 
-    form = g.csrf_form
+    # form = g.csrf_form
 
     # IMPLEMENT THIS AND FIX BUG
     # DO NOT CHANGE METHOD ON ROUTE
 
-    if form.validate_on_submit:
+    if g.csrf_form.validate_on_submit:
         do_logout()
-        flash('Logged Out!')
+        flash('You have succesfully logged out!','success')
 
     return redirect('/login')
 

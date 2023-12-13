@@ -1,5 +1,18 @@
 models.py 47: added autoincrement to Users class primary key.
+
 forms.py 49-50: added CRSF form for valid log out post requests
+
 base.html 59-63: made logout into a form POST with a hidden field for the csrf token
-app.py 35-38: added csrf_form property to g "object" assigned to instance of CSRF form (line 2)
+
+app.py 35-38: added csrf_form property to g "object" assigned to instance of CSRF form (line 2) --> updated line 7
+
 app.py 128-133: added functionality to '/logout' route to invoke do_logout() on a valid logout form submission
+
+app.py 41: added a before_request function to add CSRF protection form to global "g".
+
+
+app.py 134: added success bootstrap to log-out message
+
+users/followers users/following added hidden_tag() to post route buttons
+
+
