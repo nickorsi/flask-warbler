@@ -45,6 +45,7 @@ class User(db.Model):
         db.Integer,
         primary_key=True,
         autoincrement=True,
+        #TODO: check we need an autoincrement here?
     )
 
     email = db.Column(

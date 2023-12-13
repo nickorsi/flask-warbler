@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, flash, redirect, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import UserAddForm, LoginForm, MessageForm
+from forms import UserAddForm, LoginForm, MessageForm, CSRFForm
 from models import db, connect_db, User, Message
 
 load_dotenv()
@@ -23,6 +23,7 @@ toolbar = DebugToolbarExtension(app)
 connect_db(app)
 
 
+
 ##############################################################################
 # User signup/login/logout
 
@@ -30,6 +31,10 @@ connect_db(app)
 @app.before_request
 def add_user_to_g():
     """If we're logged in, add curr user to Flask global."""
+
+    # Establish the global variable in flask object "g" to make logout a valid
+    # form on on every page
+    g.csrf_form = CSRFForm()
 
     if CURR_USER_KEY in session:
         g.user = User.query.get(session[CURR_USER_KEY])
@@ -119,6 +124,12 @@ def logout():
 
     # IMPLEMENT THIS AND FIX BUG
     # DO NOT CHANGE METHOD ON ROUTE
+
+    if form.validate_on_submit:
+        do_logout()
+        flash('Logged Out!')
+
+    return redirect('/login')
 
 
 ##############################################################################
@@ -312,8 +323,6 @@ def homepage():
     - anon users: no messages
     - logged in: 100 most recent messages of self & followed_users
     """
-
-    breakpoint()
 
     if g.user:
         messages = (Message
