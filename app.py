@@ -258,6 +258,8 @@ def delete_user():
     Redirect to signup page.
     """
 
+    #FIXME: change into a post route revert changes
+
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
