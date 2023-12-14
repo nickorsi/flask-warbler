@@ -257,7 +257,7 @@ def delete_user():
 
     Redirect to signup page.
     """
-    # TODO: Is the user getting deleted really the signed in user?
+
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -272,7 +272,7 @@ def delete_user():
         'danger'
     )
     if form.validate_on_submit():
-        # TODO: Validate login and Delete all user messages
+
         user = User.authenticate(
             form.username.data,
             form.password.data,
