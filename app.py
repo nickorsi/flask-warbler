@@ -257,23 +257,44 @@ def delete_user():
 
     Redirect to signup page.
     """
-    # TODO: Is the user getting deleted really the signed in user?
+
+    #FIXME: change into a post route revert changes
+
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
     form = LoginForm()
 
+    #FIXME: why is our flash showing up on homepage after deleting an account
+
     flash(
-        "Danger, are you sure you want to delete your account? Login if so," +
-        "click cancel if not. All user generated messages will also be deleted.",
+        "This action cannot be undone. Are you sure you would like to" +
+        "delete your account and messages?",
         'danger'
     )
     if form.validate_on_submit():
-        # TODO: Validate login and Delete all user messages
-        do_logout()
-        db.session.delete(g.user)
-        db.session.commit()
+
+        user = User.authenticate(
+            form.username.data,
+            form.password.data,
+        )
+
+        if user:
+            user_messages = g.user.messages
+            for message in user_messages:
+                db.session.delete(message)
+                db.session.commit()
+            do_logout()
+            db.session.delete(g.user)
+            db.session.commit()
+            return redirect('/')
+
+        else:
+            flash("Invalid credentials.", 'danger')
+
+
+
 
     return render_template("users/login-to-delete.html", form=form)
 
