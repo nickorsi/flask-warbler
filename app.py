@@ -251,7 +251,7 @@ def profile():
         return redirect("/")
 
 
-@app.post('/users/delete')
+@app.route('/users/delete', methods = ["GET", "POST"])
 def delete_user():
     """Delete user.
 
@@ -262,12 +262,20 @@ def delete_user():
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    do_logout()
+    form = LoginForm()
 
-    db.session.delete(g.user)
-    db.session.commit()
+    flash(
+        "Danger, are you sure you want to delete your account? Login if so," +
+        "click cancel if not. All user generated messages will also be deleted.",
+        'danger'
+    )
+    if form.validate_on_submit():
+        # TODO: Validate login and Delete all user messages
+        do_logout()
+        db.session.delete(g.user)
+        db.session.commit()
 
-    return redirect("/signup")
+    return render_template("users/login-to-delete.html", form=form)
 
 
 ##############################################################################

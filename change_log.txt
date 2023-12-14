@@ -19,4 +19,8 @@ added {{ g.csrf_form.hidden_tag() }} to post route buttons
 
 app.py 325 added a try-except to handle errors of deleting a message that isn't user's gracefully.
 
+users/login-to-delete.html: Added a new login to delete html to force user to login prior to deleting account
 
+users/detail.html: Changed Delete button to a GET method to ensure additional authentication prior to delete
+
+app.py 265-273: Added code to start a new login form and confirm user prior to deletion.
