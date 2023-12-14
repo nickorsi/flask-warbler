@@ -13,6 +13,7 @@ app.py 41: added a before_request function to add CSRF protection form to global
 
 app.py 134: added success bootstrap to log-out message
 
-users/followers users/following added hidden_tag() to post route buttons
+users/followers.html, /following.html, /deatil.html, /index.html and messages/show.html:
+added {{ g.csrf_form.hidden_tag() }} to post route buttons
 
 

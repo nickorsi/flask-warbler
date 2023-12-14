@@ -106,7 +106,7 @@ def login():
     """
 
     if g.user:
-       return redirect('/')
+        return redirect('/')
 
     form = LoginForm()
 
@@ -169,7 +169,7 @@ def list_users():
 @app.get('/users/<int:user_id>')
 def show_user(user_id):
     """Show user profile."""
-
+    # TODO: Should showing a user profile be allowed for ALL logged in users?
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -182,7 +182,7 @@ def show_user(user_id):
 @app.get('/users/<int:user_id>/following')
 def show_following(user_id):
     """Show list of people this user is following."""
-
+    # TODO: Should showing a user's folowers be allowed for ALL users?
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -194,7 +194,7 @@ def show_following(user_id):
 @app.get('/users/<int:user_id>/followers')
 def show_followers(user_id):
     """Show list of followers of this user."""
-
+    # TODO: Should showing a user's folowees be allowed for ALL users
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -209,7 +209,7 @@ def start_following(follow_id):
 
     Redirect to following page for the current for the current user.
     """
-
+    # TODO: Should adding a follower to the current user be allowed for ALL users
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -227,7 +227,7 @@ def stop_following(follow_id):
 
     Redirect to following page for the current for the current user.
     """
-
+    # TODO: Should the current user be allowed to unfollow any user?
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -244,6 +244,11 @@ def profile():
     """Update profile for current user."""
 
     # IMPLEMENT THIS
+    # Check that user is logged in
+    # TODO: Check user matches profile? Make or condition
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
 
 
 @app.post('/users/delete')
@@ -252,7 +257,7 @@ def delete_user():
 
     Redirect to signup page.
     """
-
+    # TODO: Is the user getting deleted really the signed in user?
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -274,7 +279,7 @@ def add_message():
 
     Show form if GET. If valid, update message and redirect to user page.
     """
-
+    # TODO: Should all users be able to add their own messages?
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -294,7 +299,7 @@ def add_message():
 @app.get('/messages/<int:message_id>')
 def show_message(message_id):
     """Show a message."""
-
+    # TODO: Should all users be able to view any message?
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -310,12 +315,14 @@ def delete_message(message_id):
     Check that this message was written by the current user.
     Redirect to user page on success.
     """
-
+    # TODO: Should all users be able to delete their own message?
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
     msg = Message.query.get_or_404(message_id)
+    # TODO: Message not tied to the user?
+    # Try g.user.messages.remove(msg) and catch any errors?
     db.session.delete(msg)
     db.session.commit()
 
@@ -333,7 +340,8 @@ def homepage():
     - anon users: no messages
     - logged in: 100 most recent messages of self & followed_users
     """
-
+    # TODO: How to limit messages only to own and followers? Don't want
+    # unfollowed messages...
     if g.user:
         messages = (Message
                     .query
