@@ -1,3 +1,8 @@
+Are you a user?
+Are you authorized to see this page?
+Are you authorized to change this page?
+
+
 models.py 47: added autoincrement to Users class primary key.
 
 forms.py 49-50: added CRSF form for valid log out post requests
@@ -24,3 +29,6 @@ users/login-to-delete.html: Added a new login to delete html to force user to lo
 users/detail.html: Changed Delete button to a GET method to ensure additional authentication prior to delete
 
 app.py 265-273: Added code to start a new login form and confirm user prior to deletion.
+
+app.py 265-273: Added authentication to deleting a user & user messages.
+

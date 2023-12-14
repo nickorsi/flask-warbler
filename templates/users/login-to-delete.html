@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
 
+{% block body_class %}onboarding{% endblock %}
+
 {% block content %}
 
   <div class="row justify-content-md-center">
     <div class="col-md-7 col-lg-5">
-      <h2 class="join-message">Login In will Delete</h2>
+      <h2 class="join-message">Are you sure you want to delete your account? This action cannot be undone </h2>
+
+
 
       <form method="POST" id="user_form">
         {{ form.hidden_tag() }}
