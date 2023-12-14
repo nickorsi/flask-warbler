@@ -321,12 +321,17 @@ def delete_message(message_id):
         return redirect("/")
 
     msg = Message.query.get_or_404(message_id)
-    # TODO: Message not tied to the user?
-    # Try g.user.messages.remove(msg) and catch any errors?
-    db.session.delete(msg)
-    db.session.commit()
 
-    return redirect(f"/users/{g.user.id}")
+    try:
+        g.user.messages.remove(msg)
+        db.session.delete(msg)
+        db.session.commit()
+        return redirect(f"/users/{g.user.id}")
+
+    except ValueError:
+        flash('Message deletion unsuccesful','warning')
+        return redirect(f"/users/{g.user.id}")
+
 
 
 ##############################################################################

@@ -17,3 +17,6 @@ users/followers.html, /following.html, /deatil.html, /index.html and messages/sh
 added {{ g.csrf_form.hidden_tag() }} to post route buttons
 
 
+app.py 325 added a try-except to handle errors of deleting a message that isn't user's gracefully.
+
+
