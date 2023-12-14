@@ -26,9 +26,15 @@ app.py 325 added a try-except to handle errors of deleting a message that isn't 
 
 users/login-to-delete.html: Added a new login to delete html to force user to login prior to deleting account
 
-users/detail.html: Changed Delete button to a GET method to ensure additional authentication prior to delete
+users/detail.html: Changed Delete button to a GET method to ensure additional authentication prior to delete --> Reverted
 
-app.py 265-273: Added code to start a new login form and confirm user prior to deletion.
+app.py 265-273: Added code to start a new login form and confirm user prior to deletion.  --> Reverted
 
-app.py 265-273: Added authentication to deleting a user & user messages.
+app.py 265-273: Added authentication to deleting a user & user messages.  --> Reverted
+
+app.py 267-269: Added message delete loop prior to user deletion due to relational constraints in data tables
+
+users/detail.html 4-16, 95, 98: Added header image to html to render and refereneced user.header_image_url, showed user bio and location referencing user
+
+
 

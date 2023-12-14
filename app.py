@@ -250,53 +250,78 @@ def profile():
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-
-@app.route('/users/delete', methods = ["GET", "POST"])
+@app.post('/users/delete')
 def delete_user():
     """Delete user.
 
     Redirect to signup page.
     """
 
-    #FIXME: change into a post route revert changes
-
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    form = LoginForm()
+    do_logout()
+    # TODO: Why do messages need to be deleted prior to user deletion but not
+    # the following/followed records in the follows table?
+    user_messages = g.user.messages
+    for message in user_messages:
+        db.session.delete(message)
+        db.session.commit()
 
-    #FIXME: why is our flash showing up on homepage after deleting an account
+    db.session.delete(g.user)
+    db.session.commit()
 
-    flash(
-        "This action cannot be undone. Are you sure you would like to" +
-        "delete your account and messages?",
-        'danger'
-    )
-    if form.validate_on_submit():
+    return redirect("/signup")
 
-        user = User.authenticate(
-            form.username.data,
-            form.password.data,
-        )
+# Below route required user to log back in when deleting, kept code for future
+# use but will no use for now as it changes too much of base code.
+# @app.route('/users/delete', methods = ["GET", "POST"])
+# def delete_user():
+#     """Delete user.
 
-        if user:
-            user_messages = g.user.messages
-            for message in user_messages:
-                db.session.delete(message)
-                db.session.commit()
-            do_logout()
-            db.session.delete(g.user)
-            db.session.commit()
-            return redirect('/')
+#     Redirect to signup page.
+#     """
 
-        else:
-            flash("Invalid credentials.", 'danger')
+#     #FIXME: change into a post route revert changes
+
+#     if not g.user:
+#         flash("Access unauthorized.", "danger")
+#         return redirect("/")
+
+#     form = LoginForm()
+
+#     #FIXME: why is our flash showing up on homepage after deleting an account
+
+#     # flash(
+#     #     "This action cannot be undone. Are you sure you would like to" +
+#     #     "delete your account and messages?",
+#     #     'danger'
+#     # )
+#     if form.validate_on_submit():
+
+#         user = User.authenticate(
+#             form.username.data,
+#             form.password.data,
+#         )
+
+#         if user:
+#             user_messages = g.user.messages
+#             for message in user_messages:
+#                 db.session.delete(message)
+#                 db.session.commit()
+#             do_logout()
+#             db.session.delete(g.user)
+#             db.session.commit()
+#             return redirect('/')
+
+#         else:
+#             flash("Invalid credentials.", 'danger')
 
 
 
 
-    return render_template("users/login-to-delete.html", form=form)
+#     return render_template("users/login-to-delete.html", form=form)
 
 
 ##############################################################################
