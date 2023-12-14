@@ -37,7 +37,7 @@ class Follow(db.Model):
 
 
 class User(db.Model):
-    """User in the system."""
+    """User in the system. Relationships built to Follow and Message classes."""
 
     __tablename__ = 'users'
 
@@ -45,7 +45,6 @@ class User(db.Model):
         db.Integer,
         primary_key=True,
         autoincrement=True,
-        #TODO: check we need an autoincrement here?
     )
 
     email = db.Column(
@@ -165,7 +164,7 @@ class Message(db.Model):
     id = db.Column(
         db.Integer,
         primary_key=True,
-        #TODO: check we need an autoincrement here?
+        autoincrement=True,
     )
 
     text = db.Column(

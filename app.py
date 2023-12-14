@@ -30,7 +30,7 @@ connect_db(app)
 
 @app.before_request
 def add_user_to_g():
-    """If we're logged in, add curr user to Flask global."""
+    """ If we're logged in, add curr user to Flask global."""
 
     if CURR_USER_KEY in session:
         g.user = User.query.get(session[CURR_USER_KEY])
@@ -40,8 +40,8 @@ def add_user_to_g():
 
 @app.before_request
 def create_CSRF_Protection():
-    """ Establish the global variable in flask object "g" to make logout a valid
-    form on on every page"""
+    """ Establish the global variable in flask object "g" to secure form POSTS
+    on every relevant route """
 
     g.csrf_form = CSRFForm()
 
@@ -102,7 +102,7 @@ def signup():
 @app.route('/login', methods=["GET", "POST"])
 def login():
     """Handle user login and redirect to homepage on success.
-    If user is logged in, will redirect to user's homepage.
+    On failure, render form with error message.
     """
 
     if g.user:
@@ -139,7 +139,7 @@ def logout():
         do_logout()
         flash('You have succesfully logged out!','success')
 
-    return redirect('/login')
+    return redirect('/')
 
 
 ##############################################################################
@@ -149,7 +149,7 @@ def logout():
 def list_users():
     """Page with listing of users.
 
-    Can take a 'q' param in querystring to search by that username.
+    Can take a 'q' param in query string to search by that username.
     """
 
     if not g.user:
@@ -169,7 +169,7 @@ def list_users():
 @app.get('/users/<int:user_id>')
 def show_user(user_id):
     """Show user profile."""
-    # TODO: Should showing a user profile be allowed for ALL logged in users?
+
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -182,7 +182,7 @@ def show_user(user_id):
 @app.get('/users/<int:user_id>/following')
 def show_following(user_id):
     """Show list of people this user is following."""
-    # TODO: Should showing a user's folowers be allowed for ALL users?
+
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -194,7 +194,7 @@ def show_following(user_id):
 @app.get('/users/<int:user_id>/followers')
 def show_followers(user_id):
     """Show list of followers of this user."""
-    # TODO: Should showing a user's folowees be allowed for ALL users
+
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -207,9 +207,9 @@ def show_followers(user_id):
 def start_following(follow_id):
     """Add a follow for the currently-logged-in user.
 
-    Redirect to following page for the current for the current user.
+    Redirect to following page for the current user.
     """
-    # TODO: Should adding a follower to the current user be allowed for ALL users
+
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -225,9 +225,9 @@ def start_following(follow_id):
 def stop_following(follow_id):
     """Have currently-logged-in-user stop following this user.
 
-    Redirect to following page for the current for the current user.
+    Redirect to following page for the current  user.
     """
-    # TODO: Should the current user be allowed to unfollow any user?
+
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -241,13 +241,10 @@ def stop_following(follow_id):
 
 @app.route('/users/profile', methods=["GET", "POST"])
 def profile():
-    """Update profile for current user."""
+    """Show update form if get. Handle update form submission. Update profile
+    for current user. User must be re-authenticated for updates to be
+    accepted."""
 
-
-
-    # IMPLEMENT THIS
-    # Check that user is logged in
-    # TODO: Check user matches profile? Make or condition
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -256,7 +253,7 @@ def profile():
 
     if form.validate_on_submit():
         user = User.authenticate(
-            form.username.data,
+            g.user.username,
             form.password.data,
         )
 
@@ -270,8 +267,8 @@ def profile():
             db.session.commit()
 
 
-            flash(f"Hello, {user.username}!", "success")
-            return redirect("/")
+            flash(f"User Profile Edits Saved!", "success")
+            return redirect(f"/users/{user.id}")
 
         flash("Invalid credentials.", 'danger')
 
@@ -281,7 +278,7 @@ def profile():
 
 @app.post('/users/delete')
 def delete_user():
-    """Delete user.
+    """Delete user and user messages.
 
     Redirect to signup page.
     """
@@ -312,15 +309,11 @@ def delete_user():
 #     Redirect to signup page.
 #     """
 
-#     #FIXME: change into a post route revert changes
-
 #     if not g.user:
 #         flash("Access unauthorized.", "danger")
 #         return redirect("/")
 
 #     form = LoginForm()
-
-#     #FIXME: why is our flash showing up on homepage after deleting an account
 
 #     # flash(
 #     #     "This action cannot be undone. Are you sure you would like to" +
@@ -382,7 +375,7 @@ def add_message():
 @app.get('/messages/<int:message_id>')
 def show_message(message_id):
     """Show a message."""
-    # TODO: Should all users be able to view any message?
+
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -398,7 +391,7 @@ def delete_message(message_id):
     Check that this message was written by the current user.
     Redirect to user page on success.
     """
-    # TODO: Should all users be able to delete their own message?
+
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -431,8 +424,11 @@ def homepage():
     # TODO: How to limit messages only to own and followers? Don't want
     # unfollowed messages...
     if g.user:
+        relevant_message_user_ids = [user.id for user in g.user.following]
+        relevant_message_user_ids.append(g.user.id)
         messages = (Message
                     .query
+                    .filter(Message.user_id.in_(relevant_message_user_ids))
                     .order_by(Message.timestamp.desc())
                     .limit(100)
                     .all())

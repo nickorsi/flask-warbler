@@ -43,6 +43,8 @@ followers, following.html: added bio information to users, followers, and follow
 
 forms.py 50: added new form model for editing user.
 
+app.py 434: Added logic to filter out messages to only be the users and any followers to show up on home page
+
 
 
 
