@@ -458,9 +458,8 @@ def like_message(message_id):
         flash('Message liked!', 'success')
 
     db.session.commit()
-
-    #TODO: How to redirect to origin of post?
-    return redirect('/')
+    path_to_like = form.url.data
+    return redirect(path_to_like)
 
 
 

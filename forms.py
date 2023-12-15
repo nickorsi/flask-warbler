@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField
+from wtforms import StringField, PasswordField, TextAreaField, HiddenField
 from wtforms.validators import InputRequired, Email, Length, URL, Optional
 
 
@@ -83,3 +83,5 @@ class UserEditForm(FlaskForm):
 
 class CSRFForm(FlaskForm):
     """Empty form to establish CSRF Token for Verified LogOut"""
+
+    url = HiddenField('url')
