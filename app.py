@@ -6,7 +6,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
 from forms import UserAddForm, LoginForm, MessageForm, CSRFForm, UserEditForm
-from models import db, connect_db, User, Message, DEFAULT_IMAGE_URL, DEFAULT_HEADER_IMAGE_URL
+from models import db, connect_db, User, Message, DEFAULT_IMAGE_URL, DEFAULT_HEADER_IMAGE_URL, LikeMessages
 
 load_dotenv()
 
@@ -420,6 +420,37 @@ def delete_message(message_id):
 
     flash('Message deletion unsuccesful','warning')
     return redirect(f"/users/{g.user.id}")
+
+@app.post('/messages/<int:message_id>/like')
+def like_message(message_id):
+    """Like a message.
+
+    Check this user is authorized and form is valid. If msg exists in
+    liked_messages of user, remove it. Otherwise append it.
+    """
+    print("HEEEEEEYYYYYYYY!!!!")
+    form = g.csrf_form
+
+    if not g.user or not form.validate_on_submit():
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    msg = Message.query.get_or_404(message_id)
+    if msg in g.user.liked_messages:
+        g.user.liked_messages.remove(msg)
+        flash('Message unliked', 'success')
+    else:
+        g.user.liked_messages.append(msg)
+        flash('Message liked!', 'success')
+
+    db.session.commit()
+
+    breakpoint()
+    #TODO: How to redirect to origin of post?
+    return redirect(f'/')
+
+
+
 
 
 
