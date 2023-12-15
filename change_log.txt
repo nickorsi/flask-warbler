@@ -50,6 +50,8 @@ app: refactored from code review, added csrf protection to post routes
 
 templates/: added _like-form.html for liking message
 
+messages/show.html and user.show.html: Added includes _like-form.html to show the like button everywhere a message can be seen
+
 
 
 
