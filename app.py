@@ -447,7 +447,7 @@ def like_message(message_id):
 
     breakpoint()
     #TODO: How to redirect to origin of post?
-    return redirect(f'/')
+    return redirect('/')
 
 
 
