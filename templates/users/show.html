@@ -20,6 +20,7 @@
               {{ message.timestamp.strftime('%d %B %Y') }}
             </span>
         <p>{{ message.text }}</p>
+        {% include "_like-form.html"  %}
       </div>
     </li>
 

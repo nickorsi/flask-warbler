@@ -428,7 +428,7 @@ def like_message(message_id):
     Check this user is authorized and form is valid. If msg exists in
     liked_messages of user, remove it. Otherwise append it.
     """
-    print("HEEEEEEYYYYYYYY!!!!")
+
     form = g.csrf_form
 
     if not g.user or not form.validate_on_submit():
@@ -445,7 +445,6 @@ def like_message(message_id):
 
     db.session.commit()
 
-    breakpoint()
     #TODO: How to redirect to origin of post?
     return redirect('/')
 
