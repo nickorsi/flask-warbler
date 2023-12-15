@@ -82,6 +82,7 @@ class UserEditForm(FlaskForm):
 
 
 class CSRFForm(FlaskForm):
-    """Empty form to establish CSRF Token for Verified LogOut"""
+    """Empty form to establish CSRF Token for Verified POST submission with
+    a field for path assignment."""
 
-    url = HiddenField('url')
+    path = HiddenField('path')

@@ -440,7 +440,8 @@ def like_message(message_id):
     """Like a message.
 
     Check this user is authorized and form is valid. If msg exists in
-    liked_messages of user, remove it. Otherwise append it.
+    liked_messages of user, remove it. Otherwise append it. Redirect to same
+    page the like occured.
     """
 
     form = g.csrf_form
