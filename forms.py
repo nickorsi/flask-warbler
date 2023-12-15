@@ -47,7 +47,7 @@ class LoginForm(FlaskForm):
     )
 
 
-class EditUserForm(FlaskForm):
+class UserEditForm(FlaskForm):
     """edit profile form"""
 
     username = StringField(

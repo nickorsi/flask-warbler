@@ -5,8 +5,8 @@ from flask import Flask, render_template, request, flash, redirect, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import UserAddForm, LoginForm, MessageForm, CSRFForm, EditUserForm
-from models import db, connect_db, User, Message
+from forms import UserAddForm, LoginForm, MessageForm, CSRFForm, UserEditForm
+from models import db, connect_db, User, Message, DEFAULT_IMAGE_URL, DEFAULT_HEADER_IMAGE_URL
 
 load_dotenv()
 
@@ -130,12 +130,14 @@ def login():
 def logout():
     """Handle logout of user and redirect to homepage."""
 
-    # form = g.csrf_form
+    #maybe keep 134 and then just use "form on 139 for readability"
+    form = g.csrf_form
 
-    # IMPLEMENT THIS AND FIX BUG
-    # DO NOT CHANGE METHOD ON ROUTE
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
 
-    if g.csrf_form.validate_on_submit:
+    if form.validate_on_submit:
         do_logout()
         flash('You have succesfully logged out!','success')
 
@@ -210,13 +212,16 @@ def start_following(follow_id):
     Redirect to following page for the current user.
     """
 
+    form = g.csrf_form
+
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    followed_user = User.query.get_or_404(follow_id)
-    g.user.following.append(followed_user)
-    db.session.commit()
+    if form.validate_on_submit():
+        followed_user = User.query.get_or_404(follow_id)
+        g.user.following.append(followed_user)
+        db.session.commit()
 
     return redirect(f"/users/{g.user.id}/following")
 
@@ -228,13 +233,18 @@ def stop_following(follow_id):
     Redirect to following page for the current  user.
     """
 
+
+
+    form = g.csrf_form
+
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    followed_user = User.query.get_or_404(follow_id)
-    g.user.following.remove(followed_user)
-    db.session.commit()
+    if form.validate_on_submit():
+        followed_user = User.query.get_or_404(follow_id)
+        g.user.following.remove(followed_user)
+        db.session.commit()
 
     return redirect(f"/users/{g.user.id}/following")
 
@@ -249,7 +259,7 @@ def profile():
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    form = EditUserForm(obj=g.user)
+    form = UserEditForm(obj=g.user)
 
     if form.validate_on_submit():
         user = User.authenticate(
@@ -257,20 +267,19 @@ def profile():
             form.password.data,
         )
 
+        #TODO: combine if statements?
+
         if user:
             user.username = form.username.data
             user.email = form.email.data
-            user.image_url = form.image_url.data
-            user.header_image_url = form.header_image_url.data
+            user.image_url = form.image_url.data or DEFAULT_IMAGE_URL
+            user.header_image_url = form.header_image_url.data or DEFAULT_HEADER_IMAGE_URL
             user.bio = form.bio.data
-
             db.session.commit()
-
-
             flash(f"User Profile Edits Saved!", "success")
             return redirect(f"/users/{user.id}")
 
-        flash("Invalid credentials.", 'danger')
+    flash("Invalid credentials.", 'danger')
 
     return render_template('users/login.html', form=form)
 
@@ -282,14 +291,14 @@ def delete_user():
 
     Redirect to signup page.
     """
+    form = g.csrf_form
 
-    if not g.user:
+    if not g.user or not form.validate_on_submit():
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
     do_logout()
-    # TODO: Why do messages need to be deleted prior to user deletion but not
-    # the following/followed records in the follows table?
+
     user_messages = g.user.messages
     for message in user_messages:
         db.session.delete(message)
@@ -355,7 +364,7 @@ def add_message():
 
     Show form if GET. If valid, update message and redirect to user page.
     """
-    # TODO: Should all users be able to add their own messages?
+
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -392,21 +401,25 @@ def delete_message(message_id):
     Redirect to user page on success.
     """
 
-    if not g.user:
+
+
+    form = g.csrf_form
+
+    if not g.user or not form.validate_on_submit():
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
     msg = Message.query.get_or_404(message_id)
 
-    try:
-        g.user.messages.remove(msg)
+    if g.user.id == msg.user_id:
+        # g.user.messages.remove(msg)
         db.session.delete(msg)
         db.session.commit()
+        flash("Message deleted", "success")
         return redirect(f"/users/{g.user.id}")
 
-    except ValueError:
-        flash('Message deletion unsuccesful','warning')
-        return redirect(f"/users/{g.user.id}")
+    flash('Message deletion unsuccesful','warning')
+    return redirect(f"/users/{g.user.id}")
 
 
 
@@ -421,14 +434,12 @@ def homepage():
     - anon users: no messages
     - logged in: 100 most recent messages of self & followed_users
     """
-    # TODO: How to limit messages only to own and followers? Don't want
-    # unfollowed messages...
+
     if g.user:
-        relevant_message_user_ids = [user.id for user in g.user.following]
-        relevant_message_user_ids.append(g.user.id)
+        user_and_following_ids = [user.id for user in g.user.following] + [g.user.id]
         messages = (Message
                     .query
-                    .filter(Message.user_id.in_(relevant_message_user_ids))
+                    .filter(Message.user_id.in_(user_and_following_ids))
                     .order_by(Message.timestamp.desc())
                     .limit(100)
                     .all())
