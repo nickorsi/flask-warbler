@@ -46,6 +46,9 @@ forms.py 50: added new form model for editing user.
 app.py 434: Added logic to filter out messages to only be the users and any followers to show up on home page
 
 
+app: refactored from code review, added csrf protection to post routes
+
+
 
 
 
