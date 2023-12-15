@@ -44,6 +44,8 @@ class MessageBaseViewTestCase(TestCase):
         User.query.delete()
 
         u1 = User.signup("u1", "u1@email.com", "password", None)
+        # .flush(): a command that makes actions created in a transaction
+        # to be pending for the database.
         db.session.flush()
 
         m1 = Message(text="m1-text", user_id=u1.id)

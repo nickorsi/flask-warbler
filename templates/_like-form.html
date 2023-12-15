@@ -3,7 +3,7 @@
     method="POST"
     style="z-index:999">
     {{ g.csrf_form.url(value=request.path) }}
-    {{ g.csrf_form.hidden_tag() }}
+    {{ g.csrf_form.csrf_token }}
     {% if message in g.user.liked_messages %}
     <button >Like/Unlike
         <i class="bi bi-star-fill"></i>
