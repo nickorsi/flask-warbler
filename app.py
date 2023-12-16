@@ -436,8 +436,8 @@ def delete_message(message_id):
     return redirect(f"/users/{g.user.id}")
 
 @app.post('/messages/<int:message_id>/like')
-def like_message(message_id):
-    """Like a message.
+def change_message_like_status(message_id):
+    """Like or unlike a message.
 
     Check this user is authorized and form is valid. If msg exists in
     liked_messages of user, remove it. Otherwise append it. Redirect to same
@@ -459,8 +459,10 @@ def like_message(message_id):
         flash('Message liked!', 'success')
 
     db.session.commit()
-    path_to_like = form.url.data
-    return redirect(path_to_like)
+    # TODO: Better name, location of message unliked/liked
+    path_to_message = request.form.get('path')
+
+    return redirect(path_to_message)
 
 
 

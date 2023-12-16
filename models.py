@@ -189,7 +189,7 @@ class Message(db.Model):
         db.ForeignKey('users.id', ondelete='CASCADE'),
         nullable=False,
     )
-
+# TODO: Change to LikeMessage for table name
 class LikeMessages(db.Model):
     """A join table allowing reltionship between Users and Messages."""
 

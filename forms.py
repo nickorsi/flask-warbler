@@ -80,7 +80,8 @@ class UserEditForm(FlaskForm):
         validators=[InputRequired(), Length(min=6, max=50)],
     )
 
-
+#  TODO: Create a new like_form to have this behavior, don't expose the path
+# property on the csrfform
 class CSRFForm(FlaskForm):
     """Empty form to establish CSRF Token for Verified POST submission with
     a field for path assignment."""

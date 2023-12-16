@@ -43,7 +43,9 @@
           <span class="text-muted">
             {{ message.timestamp.strftime('%d %B %Y') }}
           </span>
-          {% include "_like-form.html"  %}
+          {% if message.user_id != g.user.id %}
+            {% include "_like-form.html"  %}
+          {% endif %}
         </div>
       </li>
     </ul>
