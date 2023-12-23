@@ -137,7 +137,7 @@ def logout():
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    if form.validate_on_submit:
+    if form.validate_on_submit():
         do_logout()
         flash('You have succesfully logged out!','success')
 
