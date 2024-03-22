@@ -2,7 +2,8 @@
 
 # run these tests like:
 #
-#    FLASK_DEBUG=False python -m unittest test_message_views.py
+#    FLASK_DEBUG=False
+#    python -m unittest test_message_views.py
 
 
 import os
