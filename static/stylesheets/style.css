@@ -396,9 +396,9 @@ p.card-bio {
   width: 100vw;
   left: 0;
   z-index: -1;
-  background-image: url("/static/images/signed-out-home.jpg");
+  background-image: url("/static/images/signed-out-home-2.jpg");
   background-size: cover;
-  background-position: center center;
+  background-position: 50% 25%;
   color: #fff;
   text-align: center;
   padding: 1rem;
