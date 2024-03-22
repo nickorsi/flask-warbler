@@ -1,17 +1,20 @@
 <!-- TODO: Move z-index to CSS -->
 <form
+    class="m-auto"
     action="/messages/{{ message.id }}/like"
     method="POST"
     style="z-index:999">
     {{ g.csrf_form.csrf_token }}
-    <input name="path" type="text" value="{{ request.path }}" class="invisible">
+    <input name="path" type="text" value="{{ request.path }}" class="invisible d-none">
     {% if message in g.user.liked_messages %}
-    <button >Like/Unlike
-        <i class="bi bi-star-fill"></i>
+    <button class="btn btn-primary d-flex justify-content-around">
+        <i class="bi bi-hand-thumbs-up-fill me-2"></i>
+        Unlike
     </button >
     {% else %}
-    <button>Like/Unlike
-        <i class="bi bi-star"></i>
+    <button class="btn btn-primary d-flex justify-content-around">
+        <i class="bi bi-hand-thumbs-up me-2"></i>
+        Like
     </button>
     {% endif %}
 </form>
