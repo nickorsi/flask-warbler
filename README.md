@@ -213,7 +213,7 @@ Nick Orsi
 ## Acknowledgments
 This contains starter code generated from [Rithm School](https://www.rithmschool.com/) as part of the curriculum in December 2023.
 
-* [Matt Smida](https://github.com/mattsmida): Co Author
+* [Seth Lawrence](https://github.com/Seth-Lawrence): Pair Programming Partner
 * [Best README Template](https://github.com/othneildrew/Best-README-Template)
 * [Mardown Badges](https://github.com/Ileriayo/markdown-badges)
 
