@@ -98,7 +98,7 @@ Some tools and concepts covered during this project:
 
 <div align="center">
   <a href="static/images/database-design.png">
-    <img src="static/satly_demo.gif" alt="App Demo Gif">
+    <img src="static/images/database-design.png" alt="Database design">
   </a>
 </div>
 
