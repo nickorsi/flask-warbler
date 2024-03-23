@@ -54,13 +54,14 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
+        <li><a href="#database-design">Database Design</a></li>
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#prerequisites">Seeding Data</a></li>
+        <li><a href="#seeding-data">Seeding Data</a></li>
       </ul>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
