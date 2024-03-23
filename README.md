@@ -24,10 +24,10 @@
 <br />
 <div align="center">
   <a href="https://github.com/nickorsi/satly">
-    <img src="static/satly_demo.gif" alt="App Demo Gif">
+    <img src="static/images/warbler_demo.gif" alt="App Demo Gif">
   </a>
   <p align="center">
-    A social media/messaing app of the aves variety!
+    A social media/messaging app of the aves variety!
     <br />
     <a href="https://nick-orsi-warbler.onrender.com/">View Demo</a>
     ·
