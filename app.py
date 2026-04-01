@@ -311,6 +311,9 @@ def delete_user():
     if not g.user or not form.validate_on_submit():
         flash("Access unauthorized.", "danger")
         return redirect("/")
+    if g.user.username == 'username' and g.user.email == 'test@example.com':
+        flash("Action not allowed", "danger")
+        return redirect(f"/users/{g.user.id}")
 
     do_logout()
 
