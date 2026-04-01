@@ -518,7 +518,7 @@ def healthcheck():
                 .query
                 .filter(User.username == 'username')
                 .all())
-    print(f'user={user}')
+
     return redirect('/')
 
 
