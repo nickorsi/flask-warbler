@@ -389,6 +389,9 @@ def add_message():
 
     form = MessageForm()
 
+    if not form.text.data:
+        form.text.data = "Hello World!"
+
     if form.validate_on_submit():
         msg = Message(text=form.text.data)
         g.user.messages.append(msg)
