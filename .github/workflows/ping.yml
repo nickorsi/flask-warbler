@@ -1,0 +1,16 @@
+name: Ping Frontend
+
+on:
+  schedule:
+    - cron: "0 */12 * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ping frontend
+        run: |
+          curl --max-time 90 --fail --silent --show-error \
+          https://nick-orsi-warbler.onrender.com/
