@@ -503,6 +503,25 @@ def homepage():
         return render_template('home-anon.html')
 
 
+##############################################################################
+# Healthcheck
+
+@app.get('/healthcheck')
+def healthcheck():
+    """Show homepage:
+
+    - anon users: no messages
+    -
+    """
+    # Check db
+    user = (User
+                .query
+                .filter(User.username == 'username')
+                .all())
+    print(f'user={user}')
+    return redirect('/')
+
+
 @app.after_request
 def add_header(response):
     """Add non-caching headers on every request."""
