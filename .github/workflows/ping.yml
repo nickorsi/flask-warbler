@@ -1,4 +1,4 @@
-name: Ping Site
+name: Ping Healthcheck
 
 on:
   schedule:
@@ -13,4 +13,4 @@ jobs:
       - name: Ping frontend
         run: |
           curl --max-time 90 --fail --silent --show-error \
-          https://nick-orsi-warbler.onrender.com/
+          https://nick-orsi-warbler.onrender.com/healthcheck
